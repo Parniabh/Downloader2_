@@ -68,7 +68,7 @@ void Downloader::sslErrors(const QList<QSslError> &sslErrors)
 #endif
 }
 
-void Downloader2_::downloadFinished(QNetworkReply *reply)
+void Downloader::downloadFinished(QNetworkReply *reply)
 {
     QUrl url = reply->url();
     if (reply->error()) {
@@ -105,6 +105,3 @@ bool Downloader::isHttpRedirect(QNetworkReply *reply)
 }
 
 
-#include "downloader.h"
-
-downloader2_::downloader() {}

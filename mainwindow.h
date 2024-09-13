@@ -8,6 +8,16 @@
 #include <QJsonArray>
 #include <QVector>
 #include <QDateTime>
+#include <QtCharts/QChart>
+#include <QtCharts/QChartView>
+#include <QtCharts/QLineSeries>
+#include <QtCharts/QValueAxis>
+#include <QListWidgetItem>
+
+#include <QtCharts/QDateTimeAxis>
+#include <QTimer>
+#include <QSplitter>
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -20,7 +30,6 @@ struct weatherDatapoint
     QString startTime;
     QString endTime;
     double probability;
-
 };
 
 class MainWindow : public QMainWindow
@@ -30,7 +39,7 @@ class MainWindow : public QMainWindow
 public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
-    //QVector<weatherDatapoint> weatherforecast;
+
     QJsonArray forecastArray;
 
 private:
@@ -39,8 +48,8 @@ private:
     QMap<QString, QJsonValue> jsonValues;
     void showDatainList();
     void inigetForecastURL(const QString &url);
-
-    struct WeatherDataPoint {
+    struct weatherDatapoint
+    {
         QDateTime startTime;
         QDateTime endTime;
         double temperature;
@@ -50,10 +59,21 @@ private:
         QString shortForecast;
     };
 
-
     QJsonArray getForecastArray(const QString &url);
     QString forecastURL;
     QVector<weatherDatapoint> weatherData;
+
+
+    QtCharts::QChart *chart;
+    QtCharts::QChartView *chartView;
+    QtCharts::QLineSeries *series;
+    QtCharts::QDateTimeAxis *axisX;
+    QtCharts::QValueAxis *axisY;
+    QTimer *timer;
+
+    void setupChart();
+    void updateChartData(const QVector<QPair<QDateTime, double>> &data);
+
 public slots:
     void enable_button();
     void show_json();
@@ -61,36 +81,14 @@ public slots:
     void process_forecast_data();
     void getForecastURL();
     void getWeatherPrediction();
-    ;
+
+    void plotForecast();
 
 private slots:
     void on_listWidget_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void on_listWidget_contents_currentItemChanged(QListWidgetItem *current, QListWidgetItem *previous);
     void on_ProcessJson_clicked();
-    void on_lineEdit_cursorPositionChanged(int arg1, int arg2);
+    void on_comboBox_activated(int index);
+    void updateWeatherData();
 };
-
-#endif // MAINWINDOW_H
-#ifndef MAINWINDOW_H
-#define MAINWINDOW_H
-
-#include <QMainWindow>
-
-QT_BEGIN_NAMESPACE
-namespace Ui {
-class MainWindow;
-}
-QT_END_NAMESPACE
-
-class MainWindow : public QMainWindow
-{
-    Q_OBJECT
-
-public:
-    MainWindow(QWidget *parent = nullptr);
-    ~MainWindow();
-
-private:
-    Ui::MainWindow *ui;
-};
-#endif // MAINWINDOW_H
+#endif
